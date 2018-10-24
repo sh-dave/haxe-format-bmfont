@@ -3,7 +3,7 @@ package format.bmfont;
 import format.bmfont.types.*;
 import haxe.io.Bytes;
 import haxe.io.BytesData;
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 typedef ReaderError = Any;
 
@@ -16,7 +16,7 @@ class XmlReader {
 
 		var bytes = Bytes.ofData(data);
 		var xml = Xml.parse(bytes.toString());
-		var fast = new Fast(xml);
+		var fast = new Access(xml);
 		var f = fast.node.font;
 
 		var fnt: BitmapFont = {
@@ -30,7 +30,7 @@ class XmlReader {
 		done(fnt, null);
 	}
 
-	static function readInfo( f: Fast ) : Info
+	static function readInfo( f: Access ) : Info
 		return {
 			face: f.att.face,
 			size: _int(f.att.size),
@@ -61,7 +61,7 @@ class XmlReader {
 			case _: { horizontal: 0, vertical: 0 }
 		}
 
-	static function readCommon( f: Fast ) : Common
+	static function readCommon( f: Access ) : Common
 		return {
 			lineHeight: _int(f.att.lineHeight),
 			base: _int(f.att.base),
@@ -75,7 +75,7 @@ class XmlReader {
 			blueChannel: f.att.packed == '1' ? f.has.blueChnl ? _int(f.att.blueChnl) : 0 : 0,
 		}
 
-	static inline function readCharacter( c: Fast ) : Character
+	static inline function readCharacter( c: Access ) : Character
 		return {
 			id: _int(c.att.id),
 			x: _int(c.att.x),
@@ -89,10 +89,10 @@ class XmlReader {
 			channel: _int(c.att.chnl)
 		}
 
-	static inline function readKernings( f: Fast )
+	static inline function readKernings( f: Access )
 		return [for (k in f.elements) _int(k.att.first) => readKerning(k)];
 
-	static inline function readKerning( k: Fast ) : Kerning
+	static inline function readKerning( k: Access ) : Kerning
 		return {
 			toCharacter: _int(k.att.second),
 			amount: _int(k.att.amount)
