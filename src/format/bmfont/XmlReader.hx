@@ -1,21 +1,14 @@
 package format.bmfont;
 
 import format.bmfont.types.*;
-import haxe.io.Bytes;
-import haxe.io.BytesData;
 import haxe.xml.Access;
 
-typedef ReaderError = Any;
-
 class XmlReader {
-	public static function read( data: BytesData, done: ?BitmapFont -> ?ReaderError -> Void ) {
-		if (data == null) {
-			done(null, 'invalid input');
-			return;
+	public static function read( xml: Xml ) : Null<BitmapFont> {
+		if (xml == null) {
+			return null;
 		}
 
-		var bytes = Bytes.ofData(data);
-		var xml = Xml.parse(bytes.toString());
 		var fast = new Access(xml);
 		var f = fast.node.font;
 
@@ -27,7 +20,7 @@ class XmlReader {
 			kernings: f.hasNode.kernings ? readKernings(f.node.kernings) : null,
 		}
 
-		done(fnt, null);
+		return fnt;
 	}
 
 	static function readInfo( f: Access ) : Info
