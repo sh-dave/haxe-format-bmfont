@@ -1,8 +1,13 @@
 # haxe-format-bmfont
 
-Parser for [Angelcode's Bitmap Font Generator](http://www.angelcode.com/products/bmfont)
+Reader for various kinds of bitmapfont files.
 
-# usage
+## supported file formats
+
+- [BMFont](http://www.angelcode.com/products/bmfont) (xml)
+- [Littera](http://kvazars.com/littera) (xml)
+
+## usage
 
 ```haxe
     import format.bmfont.types.*;
@@ -14,7 +19,7 @@ Parser for [Angelcode's Bitmap Font Generator](http://www.angelcode.com/products
     });
 ```
 
-# simple rendering example using [Kha](https://github.com/Kode/Kha.git)
+## simple rendering example using [Kha G2](https://github.com/Kode/Kha.git)
 
 (Doesn't do any fancy stuff like kerning etc...)
 
