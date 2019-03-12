@@ -32,7 +32,7 @@ class G2BitmapFontExtension {
                 char.x, char.y, char.width, char.height
             );
 
-            x += char.width;
+            x += char.xAdvance;
         }
 }
 
