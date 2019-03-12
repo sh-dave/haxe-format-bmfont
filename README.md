@@ -7,19 +7,7 @@ Reader for various kinds of bitmapfont files.
 - [BMFont](http://www.angelcode.com/products/bmfont) (xml)
 - [Littera](http://kvazars.com/littera) (xml)
 
-## usage
-
-```haxe
-    import format.bmfont.types.*;
-
-    var bytesData = ...; // load the xml font file somehow
-
-    format.bmfont.XmlReader.read(bytesData, function( ?fnt: BitmapFont, ?err ) {
-        // do stuff with `fnt`, or handle the error
-    });
-```
-
-## simple rendering example using [Kha G2](https://github.com/Kode/Kha.git)
+## usage with rendering example
 
 (Doesn't do any fancy stuff like kerning etc...)
 
@@ -33,13 +21,13 @@ import kha.graphics2.Graphics;
 using Main.G2BitmapFontExtension;
 
 class G2BitmapFontExtension {
-    public static function drawBMFString( g: Graphics, font: BitmapFont, x, y, text: String )
+    public static function drawBMFString( g: Graphics, font: BitmapFont, pages: Array<kha.Image>, x, y, text: String )
         for (i in 0...text.length) {
             var cc = text.charCodeAt(i);
             var char = font.chars.get(cc);
 
             g.drawSubImage(
-                kha.Assets.images.SomeFont_0,
+                pages[char.pageId],
                 x + char.xOffset, y + char.yOffset,
                 char.x, char.y, char.width, char.height
             );
@@ -53,21 +41,16 @@ class Main {
         kha.System.start({}, function( _ ) kha.Assets.loadEverything(init));
 
     static function init()
-        XmlReader.read(kha.Assets.blobs.SomeFont_fnt.bytes.getData(), function( ?fnt, ?err ) {
-            if (err) {
-                trace(err);
-                return;
-            }
+        var fnt = XmlReader.read(Xml.parse(kha.Assets.blobs.SomeFont_fnt.toString());
+        var pages = [kha.Assets.images.SomeFont_0];
+        
+        kha.System.notifyOnFrames(function( fbs ) {
+            var fb = fbs[0];
+            var g2 = fb.g2;
 
-            kha.System.notifyOnFrames(function( fbs ) {
-                var fb = fbs[0];
-                var g2 = fb.g2;
-
-                g2.begin();
-                    g2.drawBMFString(fnt, 16, 16, 'hello bmfont world!');
-                    g2.drawBMFString(fnt, 16, 128, '!world bmfont hello');
-                g2.end();
-            });
+            g2.begin();
+                g2.drawBMFString(fnt, pages, 16, 16, 'hello bmfont world!');
+            g2.end();
         });
 }
 ```
